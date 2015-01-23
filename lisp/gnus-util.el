@@ -885,6 +885,7 @@ Otherwise, do nothing."
 	  (gnus-put-text-property beg stop prop val)))
       (setq beg stop))))
 
+;;;###autoload
 (defun gnus-get-text-property-excluding-characters-with-faces (pos prop)
   "The same as `get-text-property', except where `gnus-face' is set.
 If so, and PROP is `face', return the second element of its value.
