@@ -870,6 +870,7 @@ If there's no subdirectory, delete DIRECTORY as well."
 	  (setq beg (point)))
 	(gnus-overlay-put (gnus-make-overlay beg (point)) prop val)))))
 
+;;;###autoload
 (defun gnus-put-text-property-excluding-characters-with-faces (beg end prop val)
   "The same as `put-text-property', except where `gnus-face' is set.
 If so, and PROP is `face', set the second element of its value to VAL.
