@@ -28,6 +28,7 @@
   (require 'cl))
 (defvar tool-bar-mode)
 
+(require 'gnus-util)
 (require 'gnus)
 (require 'gnus-start)
 (require 'nnmail)
