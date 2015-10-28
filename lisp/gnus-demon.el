@@ -160,8 +160,8 @@ marked with SPECIAL."
              ;; (func number any)
              ;; Call every `time'
              ((integerp time)
-              (run-with-timer time time 'gnus-demon-run-callback
-			      func idle time))
+              (run-with-timer 0 time 'gnus-demon-run-callback
+			      func))
              ;; (func string any)
              ((stringp time)
               (run-with-timer time (* 24 60 60) 'gnus-demon-run-callback
