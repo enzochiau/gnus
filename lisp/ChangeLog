@@ -1,3 +1,406 @@
+2015-11-01  Thomas Fitzsimmons  <fitzsim@fitzsim.org>
+
+	* ntlm.el: Change version to 2.0.0.
+
+2015-10-30  Stefan Monnier  <monnier@iro.umontreal.ca>
+
+	Silence lexical-binding warnings
+
+	* auth-source.el (auth-source-netrc-use-gpg-tokens):
+	Simplify (symbol-value 'VAR) to just VAR.
+	(auth-source-backend-parse): Use make-instance.
+	(auth-source-search): Remove unused key args.
+	Remove unused vars `accessor-key' and `backend'.  Avoid `eval'.
+	(auth-source-search-backends): Use slot names rather than their initarg.
+	(auth-source-netrc-create):
+	(auth-source-delete):
+	(auth-source-secrets-create, auth-source-plstore-search)
+	(auth-source-macos-keychain-create, auth-source-macos-keychain-search)
+	(auth-source-plstore-create, auth-source-netrc-search)
+	(auth-source-netrc-parse): Remove unused key args.
+	(auth-source-forget+): Simplify the arglist.
+	(auth-source-macos-keychain-search-items)
+	(auth-source-token-passphrase-callback-function): Mark unused args.
+	(auth-source-epa-extract-gpg-token): Remove unused var `plain'.
+	(pp-escape-newlines): Declare.
+	(auto-source--symbol-keyword): New function.
+	(auth-source-plstore-create, auth-source-netrc-create)
+	(auth-source-netrc-normalize): Use it.
+	(auth-source-netrc-search): Don't pass :delete to
+	auth-source-netrc-parse since it doesn't use it.
+	(auth-source-plstore-create, auth-source-netrc-create): Use plist-get
+	symbol-value to index in keyword args.
+	(auth-source-macos-keychain-result-append): Avoid setq.
+	(auth-source-netrc-create): Remove unused vars `file' and `add'.
+	(auth-source-user-or-password): Remove unused var `cname'.
+
+2015-10-28  Stefan Monnier  <monnier@iro.umontreal.ca>
+
+	* gnus-topic.el (gnus-topic-prepare-topic): Remove unused var `topic'.
+	(gnus-topic-remove-topic): Mark unused arg `hide'.
+	(gnus-tmp-header): Declare.
+	(gnus-topic-goto-missing-group): Remove unused var `entry'.
+	(gnus-topic-unmark-topic): Mark unused arg `dummy'.
+	(gnus-topic-copy-matching): Mark unused arg `copyp'.
+	Move initialization of `topic' into its declaration.
+
+2015-10-23  Katsumi Yamaoka  <yamaoka@jpl.org>
+
+	* auth-source.el: Revert.
+
+	* auth-source.el: Add eval-and-compile to autoloads for
+	epg-context-set-passphrase-callback, epg-decrypt-string,
+	epg-encrypt-string, and epg-context-set-armor.
+
+2015-10-22  Katsumi Yamaoka  <yamaoka@jpl.org>
+
+	* mailcap.el (mailcap-mime-data): Remove fboundp checks.
+	(mailcap-viewer-passes-test): Do it instead.  Thanks to Stefan Monnier.
+
+2015-10-21  Katsumi Yamaoka  <yamaoka@jpl.org>
+
+	* mailcap.el (mailcap-mailcap-entry-passes-test): Doc fix.
+
+2015-10-20  Michael Sperber  <mike@xemacs.org>
+
+	* mailcap.el (mailcap-mime-data): Conditonalize `doc-view-mode', which
+	does not exist on XEmacs.
+
+2015-10-18  Michael Sperber  <mike@xemacs.org>
+
+	* nnml.el (nnml-retrieve-groups, nnml-request-scan):
+	* nnmail.el (nnmail-get-new-mail-per-group):
+	(nnmail-get-new-mail-1): Unbreak `group' option for `mail-sources'.
+
+2015-10-18  Michael Sperber  <mike@xemacs.org>
+
+	* message.el (message-get-reply-headers): In addition to
+	`mail-dont-reply-to-names', bind `rmail-dont-reply-to-names', which is
+	used in XEmacs.
+
+2015-10-14  Katsumi Yamaoka  <yamaoka@jpl.org>
+
+	* auth-source.el (auth-source-epa-make-gpg-token): Revert.
+
+2015-10-11  Nicolas Petton  <petton.nicolas@gmail.com>
+
+	* auth-source.el (auth-source-epa-make-gpg-token):
+	Replace an usage of `epg-context-set-armor' with `setf'.
+	(auth-source-do-debug, auth-source-do-trivia)
+	(auth-source-read-char-choice, auth-source-search)
+	(auth-source-pick-first-password, auth-source-netrc-parse)
+	(auth-source-netrc-search, auth-source-secrets-search)
+	(auth-source-macos-keychain-search)
+	(auth-source-macos-keychain-search-items, auth-source-plstore-search)
+	(auth-source-user-or-password): Use sharp-quoting with functions.
+
+2015-09-30  Wieland Hoffmann  <themineo@gmail.com>
+
+	* auth-source.el (auth-source-search): Clarify :create's meaning.
+
+2015-09-17  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Backslash cleanup in Elisp source files
+
+	This patch should not change behavior.  It typically omits backslashes
+	where they are redundant (e.g., in the string literal "^\$").
+	In a few places, insert backslashes where they make regular expressions
+	clearer: e.g., replace "^\*" (equivalent to "^*") with "^\\*", which
+	has the same effect as a regular expression.
+	Also, use ‘\ %’ instead of ‘\%’ when avoiding confusion with SCCS IDs,
+	and similarly use ‘\ $’ instead of ‘\$’ when avoiding confusion
+	with RCS IDs, as that makes it clearer that the backslash is intended.
+	* auth-source.el (auth-source-secrets-search)
+	(auth-source-macos-keychain-search):
+	* gnus-art.el (gnus-mime-action-on-part)
+	(gnus-mime-display-multipart-related-as-mixed)
+	(gnus-button-mid-or-mail-heuristic-alist)
+	(gnus-button-mid-or-mail-heuristic, gnus-article-extend-url-button):
+	* gnus-bookmark.el (gnus-bookmark-bmenu-toggle-infos)
+	(gnus-bookmark-bookmark-inline-details, gnus-bookmark-bookmark-details)
+	(gnus-bookmark-alist, gnus-bookmark-name-from-full-record)
+	(gnus-bookmark-bmenu-mode, gnus-bookmark-delete):
+	* gnus-cus.el (gnus-group-customize):
+	* gnus-group.el (gnus-group-line-format, gnus-group-mode-line-format)
+	(gnus-group-jump-to-group-prompt, gnus-group-name-at-point):
+	* gnus-mlspl.el (gnus-group-split-fancy):
+	* gnus-registry.el (gnus-registry-prune-factor):
+	* gnus-salt.el (gnus-summary-pick-line-format):
+	* gnus-sieve.el (gnus-sieve-update, gnus-sieve-generate)
+	(gnus-sieve-script):
+	* gnus-util.el (gnus-directory-sep-char-regexp):
+	* gnus.el (gnus-message-archive-group, gnus-user-agent):
+	* message.el (message-archive-header, message-reply-headers)
+	(message-send-method-alist):
+	* mm-decode.el (mm-add-meta-html-tag):
+	* nndoc.el (nndoc-generate-lanl-gov-head):
+	* nnheader.el (nnheader-max-head-length):
+	* registry.el (registry-db, registry-prune):
+	* rfc1843.el (rfc1843-hzp-word-regexp)
+	(rfc1843-hzp-word-regexp-strictly):
+	* rfc2047.el (rfc2047-encoded-word-regexp)
+	(rfc2047-encoded-word-regexp-loose):
+
+	Fix several backslash typos in Elisp strings
+	* gnus-art.el (gnus-button-handle-library):
+	* gnus-group.el (gnus-read-ephemeral-gmane-group-url):
+	* nntp.el (nntp-via-shell-prompt, nntp-telnet-shell-prompt):
+	* spam-report.el (spam-report-gmane-regex):
+	Fix typo by replacing ‘\’ with ‘\\’ in a string literal.
+	For example, to get the regular expression ‘\.’ use the string
+	literal "\\.", not "\." (which is equivalent to ".").
+
+	* auth-source.el (auth-source-read-char-choice):
+	* nnmaildir.el (NOV example):
+	* registry.el (registry-search): Doc fix.
+
+2015-09-14  Katsumi Yamaoka  <yamaoka@jpl.org>
+
+	* gnus-compat.el: Require overlay for XEmacs.
+
+2015-09-12  Stefan Monnier  <monnier@iro.umontreal.ca>
+
+	* message.el (message-hide-headers): Bind inhibit-modification-hooks to
+	t rather than after-change-functions to nil.
+
+2015-09-09  Stefan Monnier  <monnier@iro.umontreal.ca>
+
+	* time-date.el (time-to-seconds, time-less-p):
+	Mark unused vars with underscore.
+
+2015-09-08  Stefan Monnier  <monnier@iro.umontreal.ca>
+
+	* time-date.el (with-decoded-time-value): Fix debug spec.
+
+2015-09-08  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* nnmairix.el (nnmairix-widget-create-query):
+	* time-date.el (format-seconds): Prefer grave quoting in source-code
+	strings used to generate help and diagnostics.
+
+2015-09-07  Thomas Fitzsimmons  <fitzsim@fitzsim.org>
+
+	* ntlm.el: Bump version to 2.00.  New maintainer.  Add comm keyword.
+
+2015-09-06  Katsumi Yamaoka  <yamaoka@jpl.org>
+
+	* ntlm.el (ntlm-unibyte-string): New compatibility function.
+
+2015-09-06  Thomas Fitzsimmons  <fitzsim@fitzsim.org>
+
+	Add support for NTLMv2 authentication.
+	* ntlm.el (ntlm): New customization group.
+	(ntlm-compatibility-level): New defcustom.
+	(ntlm-compute-timestamp): New function.
+	(ntlm-generate-nonce): Likewise.
+	(ntlm-build-auth-response): Add support for NTLMv2 authentication.
+
+2015-09-05  Eric Abrahamsen  <eric@ericabrahamsen.net>
+
+	* nnimap.el (nnimap-request-group): Handle nil "info" arg.  This arg
+	isn't always passed in, check it's not nil before making it into a
+	list.  The active arg will also be nil if the group is new, check for
+	that.
+
+2015-09-04  Adam Sjøgren  <asjo@koldfront.dk>
+
+	* mail-source.el (mail-source-fetch-imap): allow :mailbox to be a list.
+
+2015-09-03  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* gmm-utils.el (gmm-image-load-path-for-library):
+	* gnus-art.el (gnus-boring-article-headers, gnus-split-methods):
+	* gnus-registry.el (gnus-registry-split-strategy):
+	* gnus-start.el (gnus-check-new-newsgroups):
+	* gnus-sum.el (gnus-select-group-hook):
+	* gnus-uu.el (gnus-uu-user-archive-rules):
+	* gnus.el (gnus-message-archive-group, gnus-visual):
+	* message.el (message-cite-style):
+	* nnir.el (nnir-swish++-additional-switches)
+	(nnir-swish-e-additional-switches, nnir-hyrex-additional-switches)
+	(nnir-namazu-additional-switches, nnir-notmuch-additional-switches):
+	* nnmail.el (nnmail-split-methods, nnmail-expiry-wait-function):
+	* nntp.el (nntp-server-action-alist):
+	* tls.el (tls-checktrust):
+	Fix some more docstring etc. quoting problems.
+	Mostly these fixes prevent the transliteration of apostrophes
+	that should stay apostrophes.  Also, prefer curved quotes in
+	Bahá’í proper names, as that’s the preferred Bahá’í style and
+	these names are chock-full of non-ASCII characters anyway.
+
+2015-09-02  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Escape ` and ' in doc
+	* gnus-art.el (gnus-article-address-banner-alist)
+	(gnus-face-properties-alist):
+	* gnus-sum.el (gnus-newsgroup-variables):
+	* nndiary.el (nndiary-reminders):
+	* nnmail.el (nnmail-fancy-expiry-targets, nnmail-split-fancy):
+	Escape apostrophes and grave accents in docstrings if they
+	are supposed to stand for themselves and are not quotes.  Remove
+	apostrophes from docstring examples like ‘'(calendar-nth-named-day
+	-1 0 10 year)’ that confuse source code with data.  Do some other
+	minor docstring fixups as well, e.g., insert a missing close
+	quote.
+
+2015-09-01  Katsumi Yamaoka  <yamaoka@jpl.org>
+
+	* gnus-util.el (gnus-format-message):
+	* tls.el (tls-format-message): Use defalias at the top level so as to
+	make eval-and-compile unnecessary.  Thanks to Stefan Monnier.
+
+	* gnus-sum.el (gnus-summary-search-article):
+	Ensure that the article where the search word is found is displayed
+	and pointed to in the summary buffer.
+
+2015-08-31  Katsumi Yamaoka  <yamaoka@jpl.org>
+
+	* tls.el (tls-format-message):
+	Alias to format-message, or format if not available.
+	(open-tls-stream): Use it.
+
+2015-08-31  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* gnus-agent.el (gnus-agent-possibly-synchronize-flags-server):
+	* gnus-art.el (gnus-article-browse-delete-temp-files):
+	* gnus-eform.el (gnus-edit-form):
+	* gnus-fun.el (gnus-display-x-face-in-from):
+	* gnus-group.el (gnus-group-edit-group, gnus-group-nnimap-edit-acl):
+	* gnus-topic.el (gnus-topic-edit-parameters):
+	* mail-source.el (mail-source-delete-old-incoming):
+	* message.el (message-strip-subject-encoded-words)
+	(message-check-recipients, message-send-form-letter):
+	* mm-decode.el (mm-display-part):
+	* mm-uu.el (mm-uu-pgp-signed-extract-1):
+	* mml-smime.el (mml-smime-get-dns-cert, mml-smime-get-ldap-cert):
+	* spam-report.el (spam-report-process-queue):
+	* tls.el (open-tls-stream):
+	Respect ‘text-quoting-style’ in diagnostics.
+	* gnus-art.el (article-display-face):
+	* gnus-fun.el (gnus-display-x-face-in-from):
+	Use straight quoting in email.
+	* rfc2231.el (rfc2231-decode-encoded-string):
+	Escape apostrophes in doc strings.
+
+2015-08-26  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Go back to grave quoting in Gnus
+
+	* auth-source.el (auth-source-netrc-parse-entries):
+	* gnus-agent.el (gnus-agent-check-overview-buffer)
+	(gnus-agent-fetch-headers):
+	* gnus-int.el (gnus-start-news-server):
+	* gnus-registry.el (gnus-registry--split-fancy-with-parent-internal)
+	(gnus-registry-post-process-groups):
+	* gnus-score.el (gnus-summary-increase-score):
+	* gnus-start.el (gnus-convert-old-newsrc):
+	* gnus-topic.el (gnus-topic-rename):
+	* legacy-gnus-agent.el (gnus-agent-unlist-expire-days):
+	* spam.el (spam-check-blackholes):
+	Stick with grave quoting in diagnostics strings.  This is more
+	portable to older Emacs, desirable for Gnus.
+
+2015-08-25  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Prefer directed to neutral quotes in docstings and diagnostics.
+	In docstrings, escape apostrophes that would otherwise be translated
+	to curved quotes using the newer, simpler rules.
+
+	* auth-source.el (auth-source-netrc-parse-entries):
+	* gnus-agent.el (gnus-agent-check-overview-buffer)
+	(gnus-agent-fetch-headers):
+	* gnus-int.el (gnus-start-news-server):
+	* gnus-registry.el (gnus-registry--split-fancy-with-parent-internal):
+	* gnus-score.el (gnus-summary-increase-score):
+	* gnus-start.el (gnus-convert-old-newsrc):
+	* gnus-topic.el (gnus-topic-rename):
+	* legacy-gnus-agent.el (gnus-agent-unlist-expire-days):
+	* nnmairix.el (nnmairix-widget-create-query):
+	* spam.el (spam-check-blackholes):
+	Use directed rather than neutral quotes in diagnostics.
+
+	* gnus-util.el (gnus-format-message):
+	Alias to format-message, or format if not available.
+
+2015-08-21  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* auth-source.el (auth-sources):
+	Prefer (substitute-command-keys "`\\[foo-command]'")
+	to "`M-x foo-command'" in docstring.
+
+	* time-date.el (format-seconds):
+	Use curved quotes in diagnostic format strings.
+
+	* nnmairix.el (nnmairix-propagate-marks-upon-close):
+	* pop3.el (pop3-authentication-scheme):
+	Don't quote symbols with apostrophes in doc strings.
+	Use asymmetric quotes instead.
+
+2015-08-19  Katsumi Yamaoka  <yamaoka@jpl.org>
+
+	Use overlay functions directly
+
+	* dgnushack.el (overlay): Autoload overlay functions for XEmacs.
+	* lpath.el (delete-overlay, overlay-lists): Remove Fbind.
+
+	* gnus-art.el (gnus-mime-inline-part, gnus-mm-display-part)
+	(gnus-insert-mime-button, gnus-mime-buttonize-attachments-in-header)
+	(gnus-article-highlight-signature, gnus-article-extend-url-button)
+	(gnus-article-add-button, gnus-insert-prev-page-button)
+	(gnus-insert-next-page-button, gnus-insert-mime-security-button):
+	* gnus-cite.el (gnus-cite-delete-overlays, gnus-cite-add-face):
+	* gnus-html.el (gnus-html-wash-tags):
+	* gnus-salt.el (gnus-tree-read-summary-keys, gnus-tree-recenter)
+	(gnus-highlight-selected-tree):
+	* gnus-sum.el (gnus-summary-show-all-threads, gnus-summary-show-thread)
+	(gnus-summary-hide-thread, gnus-highlight-selected-summary):
+	* gnus-util.el (gnus-put-overlay-excluding-newlines):
+	* message.el (message-fix-before-sending)
+	(message-toggle-image-thumbnails):
+	* mm-decode.el (mm-convert-shr-links):
+	* sieve.el (sieve-highlight, sieve-insert-scripts):
+	Use overlay functions directly instead of using gnus-overlay-*,
+	message-overlay-*, and sieve-overlay-*.
+
+	* gnus-sum.el (gnus-remove-overlays):
+	* gnus-xmas.el (gnus-xmas-move-overlay, gnus-xmas-overlays-at)
+	(gnus-xmas-overlays-in, gnus-make-overlay, gnus-copy-overlay)
+	(gnus-delete-overlay, gnus-overlay-get, gnus-overlay-put)
+	(gnus-move-overlay, gnus-overlay-buffer, gnus-overlay-start)
+	(gnus-overlay-end, gnus-overlays-at, gnus-overlays-in):
+	* gnus.el (gnus-make-overlay, gnus-copy-overlay, gnus-delete-overlay)
+	(gnus-overlay-get, gnus-overlay-put, gnus-move-overlay)
+	(gnus-overlay-buffer, gnus-overlay-start, gnus-overlay-end)
+	(gnus-overlays-at, gnus-overlays-in):
+	* message.el (message-delete-overlay, message-make-overlay)
+	(message-overlay-get, message-overlay-put, message-overlays-in):
+	* messagexmas.el (message-delete-overlay, message-make-overlay)
+	(message-overlay-get, message-overlay-put, message-overlays-in):
+	* sieve.el (sieve-make-overlay, sieve-overlay-put, sieve-overlays-at):
+	Remove.
+
+2015-08-19  Glenn Morris  <rgm@gnu.org>
+
+	* nnmaildir.el (nnmaildir-flag-mark-mapping): Add "P".
+
+2015-08-18  Katsumi Yamaoka  <yamaoka@jpl.org>
+
+	* message.el (message-overlay-put, message-make-overlay)
+	(message-kill-all-overlays, message-overlays-in, message-overlay-get)
+	(message-delete-overlay, message-window-inside-pixel-edges):
+	Declare before using.
+
+2015-08-17  Katsumi Yamaoka  <yamaoka@jpl.org>
+
+	* message.el (message-overlay-get, message-overlays-in)
+	(message-window-inside-pixel-edges):
+	* messagexmas.el (message-overlay-get, message-overlays-in):
+	XEmacs compatible functions.
+
+2015-08-17  Lars Magne Ingebrigtsen  <larsi@gnus.org>
+
+	* message.el (message-toggle-image-thumbnails): New command.
+
 2015-08-06  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* message.el (message-send-form-letter): Change (message (format ...))

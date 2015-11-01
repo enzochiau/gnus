@@ -1,3 +1,26 @@
+2015-09-16  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* gnus-faq.texi (FAQ 5-8):
+	Avoid undefined behavior in suggested sed backslash usage.
+
+2015-09-08  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* gnus-faq.texi (FAQ 5-13, FAQ 6-2):
+	* gnus.texi (Score Decays, SpamAssassin): Prefer grave quoting in
+	source-code strings used to generate help and diagnostics.
+
+2015-09-04  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* gnus-faq.texi (FAQ 4-8, FAQ 4-12, FAQ 4-14):
+	* gnus.texi (Archived Messages): Fix minor problems with " in manual.
+
+2015-08-31  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* gnus-faq.texi (FAQ 5-13, FAQ 6-2):
+	* gnus.texi (Score Decays, SpamAssassin):
+	Prefer curved quotes in examples if users will typically see curved
+	quotes when the examples run.
+
 2015-07-09  Nikolaus Rath  <Nikolaus@rath.org>
 
 	* gnus.texi (Customizing the IMAP Connection):

@@ -66,7 +66,7 @@ they will keep on jabbering all the time."
   "*Max length of the head of articles.
 
 Value is an integer, nil, or t.  nil means read in chunks of a file
-indefinitely until a complete head is found\; t means always read the
+indefinitely until a complete head is found; t means always read the
 entire file immediately, disregarding `nnheader-head-chop-length'.
 
 Integer values will in effect be rounded up to the nearest multiple of
@@ -114,7 +114,7 @@ Shorter values mean quicker response, but are more CPU intensive.")
 For instance, if \":\" is invalid as a file character in file names
 on your system, you could say something like:
 
-\(setq nnheader-file-name-translation-alist '((?: . ?_)))")
+\(setq nnheader-file-name-translation-alist \\='((?: . ?_)))")
 
 (defvar nnheader-directory-separator-character
   (string-to-char (substring (file-name-as-directory ".") -1))

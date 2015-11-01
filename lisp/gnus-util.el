@@ -853,10 +853,6 @@ If there's no subdirectory, delete DIRECTORY as well."
 	  (setq beg (point)))
 	(gnus-put-text-property beg (point) prop val)))))
 
-(declare-function gnus-overlay-put  "gnus" (overlay prop value))
-(declare-function gnus-make-overlay "gnus"
-                  (beg end &optional buffer front-advance rear-advance))
-
 (defsubst gnus-put-overlay-excluding-newlines (beg end prop val)
   "The same as `put-text-property', but don't put this prop on any newlines in the region."
   (save-match-data
@@ -864,11 +860,9 @@ If there's no subdirectory, delete DIRECTORY as well."
       (save-restriction
 	(goto-char beg)
 	(while (re-search-forward gnus-emphasize-whitespace-regexp end 'move)
-	  (gnus-overlay-put
-	   (gnus-make-overlay beg (match-beginning 0))
-	   prop val)
+	  (overlay-put (make-overlay beg (match-beginning 0)) prop val)
 	  (setq beg (point)))
-	(gnus-overlay-put (gnus-make-overlay beg (point)) prop val)))))
+	(overlay-put (make-overlay beg (point)) prop val)))))
 
 (defun gnus-put-text-property-excluding-characters-with-faces (beg end prop val)
   "The same as `put-text-property', except where `gnus-face' is set.
@@ -1492,7 +1486,7 @@ sure of changing the value of `foo'."
 (defvar gnus-directory-sep-char-regexp "/"
   "The regexp of directory separator character.
 If you find some problem with the directory separator character, try
-\"[/\\\\\]\" for some systems.")
+\"[/\\\\]\" for some systems.")
 
 (defun gnus-url-unhex (x)
   (if (> x ?9)
@@ -1979,6 +1973,11 @@ to case differences."
 	   (if ignore-case
 	       (string-equal (downcase str1) (downcase prefix))
 	     (string-equal str1 prefix))))))
+
+(defalias 'gnus-format-message
+  (if (fboundp 'format-message) 'format-message
+    ;; for Emacs < 25, and XEmacs, don't worry about quote translation.
+    'format))
 
 ;; Simple check: can be a macro but this way, although slow, it's really clear.
 ;; We don't use `bound-and-true-p' because it's not in XEmacs.

@@ -196,16 +196,16 @@ this list."
   "Headers that are only to be displayed if they have interesting data.
 Possible values in this list are:
 
-  'empty       Headers with no content.
-  'newsgroups  Newsgroup identical to Gnus group.
-  'to-address  To identical to To-address.
-  'to-list     To identical to To-list.
-  'cc-list     CC identical to To-list.
-  'followup-to Followup-to identical to Newsgroups.
-  'reply-to    Reply-to identical to From.
-  'date        Date less than four days old.
-  'long-to     To and/or Cc longer than 1024 characters.
-  'many-to     Multiple To and/or Cc."
+  `empty'       Headers with no content.
+  `newsgroups'  Newsgroup identical to Gnus group.
+  `to-address'  To identical to To-address.
+  `to-list'     To identical to To-list.
+  `cc-list'     CC identical to To-list.
+  `followup-to' Followup-to identical to Newsgroups.
+  `reply-to'    Reply-to identical to From.
+  `date'        Date less than four days old.
+  `long-to'     To and/or Cc longer than 1024 characters.
+  `many-to'     Multiple To and/or Cc."
   :type '(set (const :tag "Headers with no content." empty)
 	      (const :tag "Newsgroups identical to Gnus group." newsgroups)
 	      (const :tag "To identical to To-address." to-address)
@@ -331,7 +331,7 @@ to match a mail address in the From: header, BANNER is one of a symbol
 If ADDRESS matches author's mail address, it will remove things like
 advertisements.  For example:
 
-\((\"@yoo-hoo\\\\.co\\\\.jp\\\\'\" . \"\\n_+\\nDo You Yoo-hoo!\\\\?\\n.*\\n.*\\n\"))
+\((\"@yoo-hoo\\\\.co\\\\.jp\\\\\\='\" . \"\\n_+\\nDo You Yoo-hoo!\\\\?\\n.*\\n.*\\n\"))
 "
   :type '(repeat
 	  (cons
@@ -400,7 +400,7 @@ advertisements.  For example:
   "*Alist that says how to fontify certain phrases.
 Each item looks like this:
 
-  (\"_\\\\(\\\\w+\\\\)_\" 0 1 'underline)
+  (\"_\\\\(\\\\w+\\\\)_\" 0 1 \\='underline)
 
 The first element is a regular expression to be matched.  The second
 is a number that says what regular expression grouping used to find
@@ -662,7 +662,7 @@ For instance, if you would like to save articles related to Gnus in
 the file \"gnus-stuff\", and articles related to VM in \"vm-stuff\",
 you could set this variable to something like:
 
- '((\"^Subject:.*gnus\\|^Newsgroups:.*gnus\" \"gnus-stuff\")
+  ((\"^Subject:.*gnus\\|^Newsgroups:.*gnus\" \"gnus-stuff\")
    (\"^Subject:.*vm\\|^Xref:.*vm\" \"vm-stuff\"))
 
 This variable is an alist where the key is the match and the
@@ -887,12 +887,12 @@ Here are examples:
 
 ;; Specify the altitude of Face images in the From header.
 \(setq gnus-face-properties-alist
-      '((pbm . (:face gnus-x-face :ascent 80))
+      \\='((pbm . (:face gnus-x-face :ascent 80))
 	(png . (:ascent 80))))
 
 ;; Show Face images as pressed buttons.
 \(setq gnus-face-properties-alist
-      '((pbm . (:face gnus-x-face :relief -2))
+      \\='((pbm . (:face gnus-x-face :relief -2))
 	(png . (:relief -2))))
 
 See the manual for the valid properties for various image types.
@@ -2429,7 +2429,7 @@ long lines if and only if arg is positive."
 	      (unless (setq from (gnus-article-goto-header "from"))
 		(insert "From:")
 		(setq from (point))
-		(insert " [no `from' set]\n"))
+		(insert " [no 'from' set]\n"))
 	      (while faces
 		(when (setq png (gnus-convert-face-to-png (pop faces)))
 		  (setq image
@@ -2771,7 +2771,7 @@ summary buffer."
       (cond ((file-directory-p file)
 	     (when (or (not (eq how 'file))
 		       (gnus-y-or-n-p
-			(format
+			(gnus-format-message
 			 "Delete temporary HTML file(s) in directory `%s'? "
 			 (file-name-as-directory file))))
 	       (gnus-delete-directory file)))
@@ -5404,9 +5404,9 @@ Compressed files like .gz and .bz2 are decompressed."
 				    'gnus-undeletable t))))
 	  ;; We're in the article header.
 	  (delete-char -1)
-	  (dolist (ovl (gnus-overlays-in btn (point)))
-	    (gnus-overlay-put ovl 'gnus-button-attachment-extra t)
-	    (gnus-overlay-put ovl 'face nil))
+	  (dolist (ovl (overlays-in btn (point)))
+	    (overlay-put ovl 'gnus-button-attachment-extra t)
+	    (overlay-put ovl 'face nil))
 	  (save-restriction
 	    (message-narrow-to-field)
 	    (let ((gnus-treatment-function-alist
@@ -5517,7 +5517,7 @@ If no internal viewer is available, use an external viewer."
 	 (mm-display-part handle nil t))))))
 
 (defun gnus-mime-action-on-part (&optional action)
-  "Do something with the MIME attachment at \(point\)."
+  "Do something with the MIME attachment at (point)."
   (interactive
    (list (gnus-completing-read "Action" (mapcar 'car gnus-mime-action-alist) t)))
   (gnus-article-check-buffer)
@@ -5799,9 +5799,9 @@ all parts."
 				    'gnus-undeletable t))))
 	  ;; We're in the article header.
 	  (delete-char -1)
-	  (dolist (ovl (gnus-overlays-in point (point)))
-	    (gnus-overlay-put ovl 'gnus-button-attachment-extra t)
-	    (gnus-overlay-put ovl 'face nil))
+	  (dolist (ovl (overlays-in point (point)))
+	    (overlay-put ovl 'gnus-button-attachment-extra t)
+	    (overlay-put ovl 'face nil))
 	  (save-restriction
 	    (message-narrow-to-field)
 	    (let ((gnus-treatment-function-alist
@@ -5890,8 +5890,8 @@ all parts."
 		(1- (point))
 	      (point)))
     (when gnus-article-button-face
-      (gnus-overlay-put (gnus-make-overlay b e nil t)
-			'face gnus-article-button-face))
+      (overlay-put (make-overlay b e nil t)
+		   'face gnus-article-button-face))
     (widget-convert-button
      'link b e
      :mime-handle handle
@@ -5993,7 +5993,7 @@ If t, it overrides nil values of
   "Display \"multipart/related\" parts as  \"multipart/mixed\".
 
 If displaying \"text/html\" is discouraged \(see
-`mm-discouraged-alternatives'\) images or other material inside a
+`mm-discouraged-alternatives') images or other material inside a
 \"multipart/related\" part might be overlooked when this variable is nil."
   :version "22.1"
   :group 'gnus-article-mime
@@ -6453,9 +6453,9 @@ in the body.  Use `gnus-header-face-alist' to highlight buttons."
 		  (insert "\n")
 		  (end-of-line)))
 	      (insert "\n")
-	      (dolist (ovl (gnus-overlays-in (point-min) (point)))
-		(gnus-overlay-put ovl 'gnus-button-attachment-extra t)
-		(gnus-overlay-put ovl 'face nil))
+	      (dolist (ovl (overlays-in (point-min) (point)))
+		(overlay-put ovl 'gnus-button-attachment-extra t)
+		(overlay-put ovl 'face nil))
 	      (let ((gnus-treatment-function-alist
 		     '((gnus-treat-highlight-headers
 			gnus-article-highlight-headers))))
@@ -7546,7 +7546,7 @@ must return `mid', `mail', `invalid' or `ask'."
     (10.0  . "^[^0-9]+@")
     (3.0   . "^[^0-9]+[0-9][0-9]?[0-9]?@")
     ;;      ^[^0-9]+[0-9]{1,3}\@ digits only at end of local part
-    (3.0   . "\@stud")
+    (3.0   . "@stud")
     ;;
     (2.0   . "[a-z][a-z][._-][A-Z][a-z].*@")
     ;;
@@ -7554,7 +7554,7 @@ must return `mid', `mail', `invalid' or `ask'."
     (0.5   . "^[A-Z][a-z][a-z]")
     (1.5   . "^[A-Z][a-z][A-Z][a-z][^a-z]") ;; ^[A-Z][a-z]{3,3}
     (2.0   . "^[A-Z][a-z][A-Z][a-z][a-z][^a-z]")) ;; ^[A-Z][a-z]{4,4}
-  "An alist of \(RATE . REGEXP\) pairs for `gnus-button-mid-or-mail-heuristic'.
+  "An alist of (RATE . REGEXP) pairs for `gnus-button-mid-or-mail-heuristic'.
 
 A negative RATE indicates a message IDs, whereas a positive indicates a mail
 address.  The REGEXP is processed with `case-fold-search' set to nil."
@@ -7613,9 +7613,9 @@ address, `ask' if unsure and `invalid' if the string is invalid."
 	  (gnus-message
 	   9 "Many digits in `%s', rate `%s', result `%s'."
 	   mid-or-mail rate result))
-	 ((string-match "[^aeiouy][^aeiouy][^aeiouy][^aeiouy]+.*\@"
+	 ((string-match "[^aeiouy][^aeiouy][^aeiouy][^aeiouy]+.*@"
 			mid-or-mail)
-	  ;; Too few vowels [^aeiouy]{4,}.*\@
+	  ;; Too few vowels [^aeiouy]{4,}.*@
 	  (setq result (+ result -5.0))
 	  (gnus-message
 	   9 "Few vowels in `%s', rate `%s', result `%s'."
@@ -7725,7 +7725,7 @@ Calls `describe-variable' or `describe-function'."
   "Call `locate-library' when pushing the corresponding URL button."
   (gnus-message 9 "url=`%s'" url)
   (let* ((lib (locate-library url))
-	 (file (gnus-replace-in-string (or lib "") "\.elc" ".el")))
+	 (file (gnus-replace-in-string (or lib "") "\\.elc" ".el")))
     (if (not lib)
 	(gnus-message 1 "Cannot locale library `%s'." url)
       (find-file-read-only file))))
@@ -8038,8 +8038,8 @@ It does this by highlighting everything after
       (save-restriction
 	(when (and gnus-signature-face
 		   (gnus-article-narrow-to-signature))
-	  (gnus-overlay-put (gnus-make-overlay (point-min) (point-max) nil t)
-			    'face gnus-signature-face)
+	  (overlay-put (make-overlay (point-min) (point-max) nil t)
+		       'face gnus-signature-face)
 	  (widen)
 	  (gnus-article-search-signature)
 	  (let ((start (match-beginning 0))
@@ -8114,7 +8114,7 @@ url is put as the `gnus-button-url' overlay property on the button."
 					      (< (match-end 0) start))
 				     (regexp-quote (match-string 0)))
 				   "\
-\[\t ]*\\(?:\\([^\t\n \">]+\\)[\t ]*$\\|\\([^\t\n \">]*\\)[\t ]*"
+[\t ]*\\(?:\\([^\t\n \">]+\\)[\t ]*$\\|\\([^\t\n \">]*\\)[\t ]*"
 				   delim "\\)"))
 		     (while (progn
 			      (forward-line 1)
@@ -8137,12 +8137,12 @@ url is put as the `gnus-button-url' overlay property on the button."
 				       'gnus-button-push
 				       (list beg (assq 'gnus-button-url-regexp
 						       gnus-button-alist)))))
-	  (let ((overlay (gnus-make-overlay start end)))
-	    (gnus-overlay-put overlay 'evaporate t)
-	    (gnus-overlay-put overlay 'gnus-button-url
-			      (list (mapconcat 'identity (nreverse url) "")))
+	  (let ((overlay (make-overlay start end)))
+	    (overlay-put overlay 'evaporate t)
+	    (overlay-put overlay 'gnus-button-url
+			 (list (mapconcat 'identity (nreverse url) "")))
 	    (when gnus-article-mouse-face
-	      (gnus-overlay-put overlay 'mouse-face gnus-article-mouse-face)))
+	      (overlay-put overlay 'mouse-face gnus-article-mouse-face)))
 	  t)
       (goto-char opoint))))
 
@@ -8181,8 +8181,8 @@ url is put as the `gnus-button-url' overlay property on the button."
 (defun gnus-article-add-button (from to fun &optional data text)
   "Create a button between FROM and TO with callback FUN and data DATA."
   (when gnus-article-button-face
-    (gnus-overlay-put (gnus-make-overlay from to nil t)
-		      'face gnus-article-button-face))
+    (overlay-put (make-overlay from to nil t)
+		 'face gnus-article-button-face))
   (gnus-add-text-properties
    from to
    (nconc (and gnus-article-mouse-face
@@ -8521,8 +8521,8 @@ url is put as the `gnus-button-url' overlay property on the button."
 		(1- (point))
 	      (point)))
     (when gnus-article-button-face
-      (gnus-overlay-put (gnus-make-overlay b e nil t)
-                        'face gnus-article-button-face))
+      (overlay-put (make-overlay b e nil t)
+		   'face gnus-article-button-face))
     (widget-convert-button
      'link b e
      :action 'gnus-button-prev-page
@@ -8557,8 +8557,8 @@ url is put as the `gnus-button-url' overlay property on the button."
 		(1- (point))
 	      (point)))
     (when gnus-article-button-face
-      (gnus-overlay-put (gnus-make-overlay b e nil t)
-                        'face gnus-article-button-face))
+      (overlay-put (make-overlay b e nil t)
+		   'face gnus-article-button-face))
     (widget-convert-button
      'link b e
      :action 'gnus-button-next-page
@@ -8953,8 +8953,8 @@ For example:
 		(1- (point))
 	      (point)))
     (when gnus-article-button-face
-      (gnus-overlay-put (gnus-make-overlay b e nil t)
-                        'face gnus-article-button-face))
+      (overlay-put (make-overlay b e nil t)
+		   'face gnus-article-button-face))
     (widget-convert-button
      'link b e
      :mime-handle handle

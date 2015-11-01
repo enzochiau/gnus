@@ -182,9 +182,6 @@ If NOW, use that time instead."
     'region-exists-p)
   (defalias 'message-make-caesar-translation-table
     'message-xmas-make-caesar-translation-table)
-  (defalias 'message-make-overlay 'make-extent)
-  (defalias 'message-delete-overlay 'delete-extent)
-  (defalias 'message-overlay-put 'set-extent-property)
   (defalias 'message-make-date 'message-xmas-make-date))
 
 (message-xmas-redefine)

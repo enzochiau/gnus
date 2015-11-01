@@ -75,6 +75,7 @@
 
 (defconst nnmaildir-flag-mark-mapping
   '((?F . tick)
+    (?P . forward)
     (?R . reply)
     (?S . read))
   "Alist mapping Maildir filename flags to Gnus marks.
@@ -146,7 +147,7 @@ by nnmaildir-request-article.")
 
 ;; A NOV structure looks like this (must be prin1-able, so no defstruct):
 ["subject\tfrom\tdate"
- "references\tchars\lines"
+ "references\tchars\tlines"
  "To: you\tIn-Reply-To: <your.mess@ge>"
  (12345 67890)     ;; modtime of the corresponding article file
  (to in-reply-to)] ;; contemporary value of nnmail-extra-headers

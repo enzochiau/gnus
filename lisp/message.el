@@ -371,7 +371,7 @@ few false positives here."
 
 (defcustom message-archive-header "X-No-Archive: Yes\n"
   "Header to insert when you don't want your article to be archived.
-Archives \(such as groups.google.com\) respect this header."
+Archives \(such as groups.google.com) respect this header."
   :version "22.1"
   :type 'string
   :link '(custom-manual "(message)Header Commands")
@@ -549,7 +549,7 @@ The provided functions are:
       newsgroup), in brackets followed by the subject
 * `message-forward-subject-name-subject' Source of article (name of author
       or newsgroup), in brackets followed by the subject
-* `message-forward-subject-fwd' Subject of article with 'Fwd:' prepended
+* `message-forward-subject-fwd' Subject of article with `Fwd:' prepended
       to it."
   :group 'message-forwarding
   :link '(custom-manual "(message)Forwarding")
@@ -1175,7 +1175,7 @@ Presets to impersonate popular mail agents are found in the
 message-cite-style-* variables.  This variable is intended for
 use in `gnus-posting-styles', such as:
 
-  ((posting-from-work-p) (eval (set (make-local-variable 'message-cite-style) message-cite-style-outlook)))"
+  ((posting-from-work-p) (eval (set (make-local-variable \\='message-cite-style) message-cite-style-outlook)))"
   :version "24.1"
   :group 'message-insertion
   :type '(choice (const :tag "Do not override variables" :value nil)
@@ -1244,7 +1244,7 @@ If stringp, use this; if non-nil, use no host name (user name only)."
 (defvar message-reply-headers nil
   "The headers of the current replied article.
 It is a vector of the following headers:
-\[number subject from date id references chars lines xref extra].")
+[number subject from date id references chars lines xref extra].")
 (defvar message-newsreader nil)
 (defvar message-mailer nil)
 (defvar message-sent-message-via nil)
@@ -1347,7 +1347,7 @@ actually occur."
   "Alist of ways to send outgoing messages.
 Each element has the form
 
-  \(TYPE PREDICATE FUNCTION)
+  (TYPE PREDICATE FUNCTION)
 
 where TYPE is a symbol that names the method; PREDICATE is a function
 called without any parameters to determine whether the message is
@@ -2049,6 +2049,17 @@ You must have the \"hashcash\" binary installed, see `hashcash-path'."
 (unless (fboundp 'mail-dont-reply-to)
   (defalias 'mail-dont-reply-to 'rmail-dont-reply-to))
 
+(eval-and-compile
+  (if (featurep 'emacs)
+      (progn
+	(defun message-kill-all-overlays ()
+	  (mapcar #'delete-overlay (overlays-in (point-min) (point-max))))
+	(defalias 'message-window-inside-pixel-edges
+	  'window-inside-pixel-edges))
+    (defun message-kill-all-overlays ()
+      (map-extents (lambda (extent ignore) (delete-extent extent))))
+    (defalias 'message-window-inside-pixel-edges 'ignore)))
+
 
 
 ;;;
@@ -2268,7 +2279,7 @@ contains a valid encoded word.  Decode again? "
 	  (unless cs-coding
 	    (setq cs-coding
 		  (mm-read-coding-system
-		   (format "\
+		   (gnus-format-message "\
 Decoded Subject \"%s\"
 contains an encoded word.  The charset `%s' is unknown or invalid.
 Hit RET to replace non-decodable characters with \"%s\" or enter replacement
@@ -4424,8 +4435,7 @@ conformance."
 		to (cdar regions)
 		regions (cdr regions))
 	  (put-text-property from to 'invisible nil)
-	  (message-overlay-put (message-make-overlay from to)
-			       'face 'highlight))
+	  (overlay-put (make-overlay from to) 'face 'highlight))
 	(unless (yes-or-no-p
 		 "Invisible text found and made visible; continue sending? ")
 	  (error "Invisible text found and made visible")))))
@@ -4452,8 +4462,7 @@ conformance."
 						 control-1))
 		       (not (get-text-property
 			     (point) 'untranslated-utf-8))))
-	  (message-overlay-put (message-make-overlay (point) (1+ (point)))
-			       'face 'highlight)
+	  (overlay-put (make-overlay (point) (1+ (point))) 'face 'highlight)
 	  (setq found t))
 	(forward-char))
       (when found
@@ -4545,7 +4554,7 @@ This function could be useful in `message-setup-hook'."
 	  (dolist (bog (message-bogus-recipient-p addr))
 	    (and bog
 		 (not (y-or-n-p
-		       (format
+		       (gnus-format-message
 			"Address `%s'%s might be bogus.  Continue? "
 			bog
 			;; If the encoded version of the email address
@@ -6965,7 +6974,8 @@ want to get rid of this query permanently.")))
       (while (string-match "[ \t][ \t]+" recipients)
 	(setq recipients (replace-match " " t t recipients)))
       ;; Remove addresses that match `mail-dont-reply-to-names'.
-      (let ((mail-dont-reply-to-names (message-dont-reply-to-names)))
+      (let* ((mail-dont-reply-to-names (message-dont-reply-to-names))
+	     (rmail-dont-reply-to-names mail-dont-reply-to-names))
 	(setq recipients (mail-dont-reply-to recipients)))
       ;; Perhaps "Mail-Copies-To: never" removed the only address?
       (if (string-equal recipients "")
@@ -7245,7 +7255,7 @@ want to get rid of this query permanently."))
 
 (defun message-is-yours-p ()
   "Non-nil means current article is yours.
-If you have added 'cancel-messages to `message-shoot-gnksa-feet', all articles
+If you have added `cancel-messages' to `message-shoot-gnksa-feet', all articles
 are yours except those that have Cancel-Lock header not belonging to you.
 Instead of shooting GNKSA feet, you should modify `message-alternative-emails'
 regexp to match all of yours addresses."
@@ -7929,14 +7939,6 @@ which specify the range to operate on."
   (goto-char (prog1 (mark t)
 	       (set-marker (mark-marker) (point)))))
 
-(defalias 'message-make-overlay 'make-overlay)
-(defalias 'message-delete-overlay 'delete-overlay)
-(defalias 'message-overlay-put 'overlay-put)
-(defun message-kill-all-overlays ()
-  (if (featurep 'xemacs)
-      (map-extents (lambda (extent ignore) (delete-extent extent)))
-    (mapcar #'delete-overlay (overlays-in (point-min) (point-max)))))
-
 ;; Support for toolbar
 (defvar tool-bar-mode)
 
@@ -8220,7 +8222,7 @@ The following arguments may contain lists of values."
 (defun message-flatten-list (list)
   "Return a new, flat list that contains all elements of LIST.
 
-\(message-flatten-list '(1 (2 3 (4 5 (6))) 7))
+\(message-flatten-list \\='(1 (2 3 (4 5 (6))) 7))
 => (1 2 3 4 5 6 7)"
   (cond ((consp list)
 	 (apply 'append (mapcar 'message-flatten-list list)))
@@ -8373,7 +8375,7 @@ From headers in the original article."
 		     (list message-hidden-headers)
 		   message-hidden-headers))
 	(inhibit-point-motion-hooks t)
-	(after-change-functions nil)
+	(inhibit-modification-hooks t)
 	(end-of-headers (point-min)))
     (when regexps
       (save-excursion
@@ -8528,7 +8530,7 @@ Header and body are separated by `mail-header-separator'."
 	(when force
 	  (sit-for message-send-form-letter-delay))
 	(if (or force
-		  (y-or-n-p (format "Send message to `%s'? " to)))
+		  (y-or-n-p (gnus-format-message "Send message to `%s'? " to)))
 	    (progn
 	      (setq sent (1+ sent))
 	      (message-send-and-exit))
@@ -8591,13 +8593,43 @@ Used in `message-simplify-recipients'."
 ;;; multipart/related and HTML support.
 
 (defun message-make-html-message-with-image-files (files)
+  "Make a message containing the current dired-marked image files."
   (interactive (list (dired-get-marked-files nil current-prefix-arg)))
   (message-mail)
   (message-goto-body)
   (insert "<#part type=text/html>\n\n")
   (dolist (file files)
     (insert (format "<img src=%S>\n\n" file)))
+  (message-toggle-image-thumbnails)
   (message-goto-to))
+
+(defun message-toggle-image-thumbnails ()
+  "For any included image files, insert a thumbnail of that image."
+  (interactive)
+  (let ((overlays (overlays-in (point-min) (point-max)))
+	(displayed nil))
+    (while overlays
+      (let ((overlay (car overlays)))
+	(when (overlay-get overlay 'put-image)
+	  (delete-overlay overlay)
+	  (setq displayed t)))
+      (setq overlays (cdr overlays)))
+    (unless displayed
+      (save-excursion
+	(goto-char (point-min))
+	(while (re-search-forward "<img.*src=\"\\([^\"]+\\)" nil t)
+	  (let ((file (match-string 1))
+		(edges (message-window-inside-pixel-edges
+			(get-buffer-window (current-buffer)))))
+	    (put-image
+	     (create-image
+	      file 'imagemagick nil
+	      :max-width (truncate
+			  (* 0.7 (- (nth 2 edges) (nth 0 edges))))
+	      :max-height (truncate
+			   (* 0.5 (- (nth 3 edges) (nth 1 edges)))))
+	     (match-beginning 0)
+	     " ")))))))
 
 (when (featurep 'xemacs)
   (require 'messagexmas)

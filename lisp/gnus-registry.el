@@ -194,17 +194,17 @@ are tracked this way by default."
   "The splitting strategy applied to the keys in `gnus-registry-track-extra'.
 
 Given a set of unique found groups G and counts for each element
-of G, and a key K (typically 'sender or 'subject):
+of G, and a key K (typically `sender' or `subject'):
 
 When nil, if G has only one element, use it.  Otherwise give up.
 This is the fastest but also least useful strategy.
 
-When 'majority, use the majority by count.  So if there is a
+When `majority', use the majority by count.  So if there is a
 group with the most articles counted by K, use that.  Ties are
 resolved in no particular order, simply the first one found wins.
 This is the slowest strategy but also the most accurate one.
 
-When 'first, the first element of G wins.  This is fast and
+When `first', the first element of G wins.  This is fast and
 should be OK if your senders and subjects don't \"bleed\" across
 groups."
   :group 'gnus-registry
@@ -251,7 +251,7 @@ In order to prevent constant pruning, we prune back to a number
 somewhat less than the maximum size.  This option controls
 exactly how much less.  For example, given a maximum size of
 50000 and a prune factor of 0.1, the pruning process will try to
-cut the registry back to \(- 50000 \(* 50000 0.1\)\) -> 45000
+cut the registry back to \(- 50000 \(* 50000 0.1)) -> 45000
 entries.  The pruning process is constrained by the presence of
 \"precious\" entries."
   :version "25.1"
@@ -558,7 +558,7 @@ See the Info node `(gnus)Fancy Mail Splitting' for more details."
                      do (gnus-message
                          ;; warn more if gnus-registry-track-extra
                          (if gnus-registry-track-extra 7 9)
-                         "%s (extra tracking) traced subject '%s' to %s"
+                         "%s (extra tracking) traced subject `%s' to %s"
                          log-agent subject group)
                     and collect group))
          ;; filter the found groups and return them
@@ -585,7 +585,7 @@ See the Info node `(gnus)Fancy Mail Splitting' for more details."
                      do (gnus-message
                          ;; warn more if gnus-registry-track-extra
                          (if gnus-registry-track-extra 7 9)
-                         "%s (extra tracking) traced sender '%s' to %s"
+                         "%s (extra tracking) traced sender `%s' to %s"
                          log-agent sender group)
                      and collect group)))
 
@@ -615,7 +615,7 @@ See the Info node `(gnus)Fancy Mail Splitting' for more details."
                          do (gnus-message
                              ;; warn more if gnus-registry-track-extra
                              (if gnus-registry-track-extra 7 9)
-                             "%s (extra tracking) traced recipient '%s' to %s"
+                             "%s (extra tracking) traced recipient `%s' to %s"
                              log-agent recp group)
                         and collect group)))))
 
@@ -630,7 +630,7 @@ See the Info node `(gnus)Fancy Mail Splitting' for more details."
 (defun gnus-registry-post-process-groups (mode key groups)
   "Inspects GROUPS found by MODE for KEY to determine which ones to follow.
 
-MODE can be 'subject' or 'sender' for example.  The KEY is the
+MODE can be `subject' or `sender' for example.  The KEY is the
 value by which MODE was searched.
 
 Transforms each group name to the equivalent short name.
@@ -712,12 +712,12 @@ possible.  Uses `gnus-registry-split-strategy'."
      ((null out)
       (gnus-message
        5
-       "%s: no matches for %s '%s'."
+       "%s: no matches for %s `%s'."
        log-agent mode key)
       nil)
      (t (gnus-message
          5
-         "%s: too many extra matches (%s) for %s '%s'.  Returning none."
+         "%s: too many extra matches (%s) for %s `%s'.  Returning none."
          log-agent out mode key)
         nil))))
 
